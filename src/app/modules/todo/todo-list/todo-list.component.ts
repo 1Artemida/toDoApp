@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Task } from '../todo.interfaces';
+import { Task, TaskStatus } from '../todo.interfaces';
 import { CommonModule } from '@angular/common';
 import { TruncateTooltipPipe } from '../pipes/truncate-tooltip.pipe';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
@@ -23,14 +23,24 @@ import { FilterTasksPipe } from '../pipes/filter-tasks.pipe';
 export class TodoListComponent {
   filter: 'all' | 'active' | 'completed' = 'all';
   @Input() tasks: Task[] = [];
-  @Output() onToggleTask = new EventEmitter<number>();
+  @Output() onToggleTask = new EventEmitter<{
+    id: number;
+    completed: boolean;
+  }>();
+  @Output() onEditTask = new EventEmitter<{ id: number; newTitle: string }>();
+  @Output() onStatusChange = new EventEmitter<{
+    id: number;
+    status: TaskStatus;
+  }>();
   @Output() onClearCompleted = new EventEmitter();
-  @Output() onEditTask = new EventEmitter<{ id: number; newName: string }>();
 
   constructor() {}
 
-  toggleTask(task: Task): void {
-    this.onToggleTask.emit(task.id);
+  toggleTask(task: Task, event: Event): void {
+    this.onToggleTask.emit({
+      id: task.id,
+      completed: (event.target as HTMLInputElement).checked,
+    });
   }
 
   clearCompleted(): void {
@@ -41,10 +51,21 @@ export class TodoListComponent {
     if (task.completed) {
       return;
     }
-    const newName = prompt('Edit a task:', task.name);
-    if (newName && newName.trim() && newName !== task.name) {
-      this.onEditTask.emit({ id: task.id, newName: newName.trim() });
+    const newTitle = prompt('Edit a task:', task.title);
+    if (newTitle && newTitle !== task.title) {
+      this.onEditTask.emit({ id: task.id, newTitle });
     }
+  }
+
+  changeStatus(task: Task, status: TaskStatus): void {
+    if (task.status === status) return;
+    this.onStatusChange.emit({ id: task.id, status });
+  }
+
+  handleStatusChange(taskId: number, event: Event): void {
+    const target = event.target as HTMLSelectElement;
+    const newStatus = target.value as unknown as TaskStatus;
+    this.onStatusChange.emit({ id: taskId, status: newStatus });
   }
 
   drop(event: CdkDragDrop<Task[]>) {
