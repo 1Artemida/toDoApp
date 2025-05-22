@@ -1,0 +1,10 @@
+<div class="todo-create">
+    <input 
+        class="todo-input" 
+        #todoInput 
+        (keyup.enter)="addTask(todoInput)" 
+        type="text" 
+        matInput 
+        placeholder="Create a new todo..."
+    />
+</div>

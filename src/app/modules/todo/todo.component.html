@@ -1,0 +1,36 @@
+<div class="todo-container">
+
+    <div class="todo-header">
+        <span class="todo-title">TODO</span>
+        <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24"
+            width="24px" fill="#F3F3F3">
+            <g>
+                <rect fill="none" height="24" width="24" />
+            </g>
+            <g>
+                <g>
+                    <path
+                        d="M12.34 2.02C6.59 1.82 2 6.42 2 12c0 5.52 4.48 10 10 10 3.71 0 6.93-2.02 8.66-5.02-7.51-.25-12.09-8.43-8.32-14.96z" />
+                </g>
+            </g>
+        </svg>
+    </div>
+
+    <div class="todo-create">
+        <app-todo-create (onAddTask)="addTask($event)"></app-todo-create>
+    </div>
+
+    <div class="todo-list">
+        <app-todo-list
+            [tasks]="tasks" 
+            (onToggleTask)="toggleTaskCompletion($event)"
+            (onClearCompleted)="clearCompleted()"
+            (onEditTask)="editTask($event)">
+        </app-todo-list>
+    </div>
+
+    <div class="todo-footer">
+        <p>Drad and drop to reorder list</p>
+    </div>
+    
+</div>
