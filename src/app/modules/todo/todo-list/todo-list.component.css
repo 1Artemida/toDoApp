@@ -5,9 +5,9 @@
   background: #ffffff;
   position: relative;
   border-radius: 5px;
-  max-height: 500px;
-  height: 500px;
-  width: 600px;
+  max-height: 600px;
+  height: 600px;
+  width: 700px;
   overflow-y: auto;
   box-shadow: 1px 11px 24px -14px rgba(66, 68, 90, 1);
   flex-grow: 1;
@@ -105,13 +105,22 @@
   padding: 4px 6px;
   border-radius: 4px;
   font-size: 12px;
-  background: radial-gradient(
-    circle,
-    rgba(182, 76, 213, 0.7) 18%,
-    rgba(40, 115, 226, 0.38) 95%
-  );
-  color: #1b0303;
   border: none;
+}
+
+.status-low {
+  background-color: #d0f0c0;
+  color: #064b1b;
+}
+
+.status-medium {
+  background-color: #fff3cd;
+  color: #7a5c00;
+}
+
+.status-high {
+  background-color: #f8d7da;
+  color: #721c24;
 }
 
 .task-status-select:disabled {
@@ -188,20 +197,82 @@
   font-size: 14px;
   margin: 0 4px;
   border: none;
-  background: none;
-  color: #757575;
   cursor: pointer;
 }
 
 .todo-statuses button {
-  margin: 0 4px;
+  padding: 6px 12px;
   border: none;
-  background: none;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  background-color: #e0e0e0;
+  color: #333;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.todo-statuses button:hover {
+  transform: scale(1.03);
 }
 
 .todo-statuses button.active {
   font-weight: bold;
   color: rgba(118, 45, 215, 0.73);
+}
+
+.todo-statuses button.low {
+  background-color: #d0f0c0;
+  color: #064b1b;
+}
+
+.todo-statuses button.low.active {
+  outline-color: #064b1b;
+}
+
+.todo-statuses button.medium {
+  background-color: #fff3cd;
+  color: #7a5c00;
+}
+
+.todo-statuses button.medium.active {
+  outline-color: #7a5c00;
+}
+
+.todo-statuses button.high {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.todo-statuses button.high.active {
+  outline-color: #721c24;
+}
+
+button.clear {
+  padding: 6px 14px;
+  background-color: #f44336;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.25s ease, transform 0.1s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+button.clear:hover {
+  background-color: #d32f2f;
+  transform: scale(1.03);
+}
+
+button.clear:active {
+  background-color: #b71c1c;
+}
+
+button.clear:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 @media (max-width: 767px) {

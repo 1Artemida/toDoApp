@@ -12,6 +12,7 @@ import { TodoListComponent } from './todo-list/todo-list.component';
 })
 export class TodoComponent implements OnInit {
   tasks = signal<Task[]>([]);
+  isDeleting = false;
 
   constructor(private todoService: TodoService) {}
 
@@ -32,7 +33,7 @@ export class TodoComponent implements OnInit {
   toggleTaskCompletion(event: { id: number; completed: boolean }): void {
     this.todoService
       .toggleTaskCompletion(event.id, event.completed)
-      .subscribe();
+      .subscribe(() => this.fetchTasks());
   }
 
   editTask(event: { id: number; newTitle: string }): void {
@@ -52,8 +53,10 @@ export class TodoComponent implements OnInit {
   }
 
   clearCompleted(): void {
-    if (confirm('Delete all completed tasks?')) {
-      this.todoService.clearCompletedTasks().subscribe(() => this.fetchTasks());
-    }
+    if (!confirm('Delete all COMPLETED tasks?')) return;
+
+    this.isDeleting = true;
+
+    this.todoService.clearCompletedTasks().subscribe(() => this.fetchTasks());
   }
 }
