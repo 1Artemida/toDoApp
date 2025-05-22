@@ -21,7 +21,8 @@ import { FilterTasksPipe } from '../pipes/filter-tasks.pipe';
   styleUrl: './todo-list.component.css',
 })
 export class TodoListComponent {
-  filter: 'all' | 'active' | 'completed' = 'all';
+  TaskStatus = TaskStatus;
+  filter: 'all' | 'active' | 'completed' | TaskStatus = 'all';
   @Input() tasks: Task[] = [];
   @Output() onToggleTask = new EventEmitter<{
     id: number;

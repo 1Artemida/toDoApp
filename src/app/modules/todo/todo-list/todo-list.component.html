@@ -38,6 +38,11 @@
       <div class="todo-list-part">
         <select
           class="task-status-select"
+          [ngClass]="{
+            'status-low': task.status === 'low',
+            'status-medium': task.status === 'medium',
+            'status-high': task.status === 'high'
+          }"
           [value]="task.status || ''"
           (change)="handleStatusChange(task.id, $event)"
           [disabled]="task.completed"
@@ -75,12 +80,7 @@
   </div>
 
   <div class="todo-actions">
-    <span
-      >{{ tasks | itemsLeft }} item{{
-        tasks.length !== 1 ? "s" : ""
-      }}
-      left</span
-    >
+    <span>{{ tasks | itemsLeft }} item{{ tasks.length !== 1 ? "s" : "" }}</span>
 
     <div class="todo-statuses">
       <button [ngClass]="{ active: filter === 'all' }" (click)="filter = 'all'">
@@ -98,8 +98,29 @@
       >
         Completed
       </button>
+      <button
+        class="low"
+        [ngClass]="{ active: filter === TaskStatus.low }"
+        (click)="filter = TaskStatus.low"
+      >
+        Low
+      </button>
+      <button
+        class="medium"
+        [ngClass]="{ active: filter === TaskStatus.medium }"
+        (click)="filter = TaskStatus.medium"
+      >
+        Medium
+      </button>
+      <button
+        class="high"
+        [ngClass]="{ active: filter === TaskStatus.high }"
+        (click)="filter = TaskStatus.high"
+      >
+        High
+      </button>
     </div>
 
-    <button (click)="clearCompleted()">Clear Completed</button>
+    <button class="clear" (click)="clearCompleted()">Clear</button>
   </div>
 </div>

@@ -1,7 +1,7 @@
 export enum TaskStatus {
   low = 'low',
   medium = 'medium',
-  hihg = 'high',
+  high = 'high',
 }
 
 export interface Task {
