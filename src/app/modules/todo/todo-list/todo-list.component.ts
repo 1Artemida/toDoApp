@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Task, TaskStatus } from '../todo.interfaces';
+import { Task, TaskStates, TaskStatus } from '../todo.interfaces';
 import { CommonModule } from '@angular/common';
 import { TruncateTooltipPipe } from '../pipes/truncate-tooltip.pipe';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
@@ -21,8 +21,10 @@ import { FilterTasksPipe } from '../pipes/filter-tasks.pipe';
   styleUrl: './todo-list.component.css',
 })
 export class TodoListComponent {
-  TaskStatus = TaskStatus;
-  filter: 'all' | 'active' | 'completed' | TaskStatus = 'all';
+  readonly TaskStatus = TaskStatus;
+  readonly TaskStates = TaskStates;
+  filter: TaskStates | TaskStatus = TaskStates.all;
+
   @Input() tasks: Task[] = [];
   @Output() onToggleTask = new EventEmitter<{
     id: number;
@@ -69,7 +71,7 @@ export class TodoListComponent {
     this.onStatusChange.emit({ id: taskId, status: newStatus });
   }
 
-  drop(event: CdkDragDrop<Task[]>) {
+  drop(event: CdkDragDrop<Task[]>): void {
     moveItemInArray(this.tasks, event.previousIndex, event.currentIndex);
   }
 }

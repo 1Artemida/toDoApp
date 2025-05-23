@@ -4,6 +4,12 @@ export enum TaskStatus {
   high = 'high',
 }
 
+export enum TaskStates {
+  all = 'all',
+  active = 'active',
+  completed = 'completed',
+}
+
 export interface Task {
   id: number;
   title: string;

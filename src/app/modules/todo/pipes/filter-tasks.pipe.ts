@@ -1,15 +1,14 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Task, TaskStatus } from '../todo.interfaces';
+import { Task, TaskStatus, TaskStates } from '../todo.interfaces';
 
 @Pipe({
   name: 'filterTasks',
   standalone: true,
 })
 export class FilterTasksPipe implements PipeTransform {
-  transform(
-    tasks: Task[],
-    filter: 'all' | 'active' | 'completed' | TaskStatus
-  ): Task[] {
+  transform(tasks: Task[] = [], filter: TaskStates | TaskStatus): Task[] {
+    if (!Array.isArray(tasks)) return [];
+
     switch (filter) {
       case 'active':
         return tasks.filter((task) => !task.completed);

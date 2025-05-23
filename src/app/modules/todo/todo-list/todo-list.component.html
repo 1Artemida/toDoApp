@@ -5,7 +5,7 @@
 >
   <ng-container *ngIf="tasks.length === 0">
     <div class="todo-no-tasks-message">
-      <span>There are no todo yet. Create a todo!</span>
+      <span>There are no todos yet. Create a todo!</span>
     </div>
   </ng-container>
 
@@ -83,38 +83,41 @@
     <span>{{ tasks | itemsLeft }} item{{ tasks.length !== 1 ? "s" : "" }}</span>
 
     <div class="todo-statuses">
-      <button [ngClass]="{ active: filter === 'all' }" (click)="filter = 'all'">
+      <button
+        [ngClass]="{ active: filter === 'all' }"
+        (click)="filter = TaskStates.all"
+      >
         All
       </button>
       <button
         [ngClass]="{ active: filter === 'active' }"
-        (click)="filter = 'active'"
+        (click)="filter = TaskStates.active"
       >
         Active
       </button>
       <button
         [ngClass]="{ active: filter === 'completed' }"
-        (click)="filter = 'completed'"
+        (click)="filter = TaskStates.completed"
       >
         Completed
       </button>
       <button
-        class="low"
-        [ngClass]="{ active: filter === TaskStatus.low }"
+        [ngClass]="{
+          low: false,
+          active: filter === TaskStatus.low
+        }"
         (click)="filter = TaskStatus.low"
       >
         Low
       </button>
       <button
-        class="medium"
-        [ngClass]="{ active: filter === TaskStatus.medium }"
+        [ngClass]="{ medium: true, active: filter === TaskStatus.medium }"
         (click)="filter = TaskStatus.medium"
       >
         Medium
       </button>
       <button
-        class="high"
-        [ngClass]="{ active: filter === TaskStatus.high }"
+        [ngClass]="{ high: false, active: filter === TaskStatus.high }"
         (click)="filter = TaskStatus.high"
       >
         High
