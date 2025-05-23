@@ -1,89 +1,122 @@
 .todo-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-image: url(/images/background.jpeg);
-    background-position: top center;
-    background-size: 100% 35%;
-    width: 100%;
-    height: 100vh;
-    background-repeat: no-repeat;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-image: url(/images/background.jpeg);
+  background-position: top center;
+  background-size: 100% 35%;
+  width: 100%;
+  height: 100vh;
+  background-repeat: no-repeat;
+}
+
+.spinner-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(2px);
+}
+
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #c644ca;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .todo-header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    width: 600px;
-    text-align: center;
-    align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 600px;
+  text-align: center;
+  align-items: center;
 }
 
 .todo-title {
-    font-size: 32px;
-    text-transform: uppercase;
-    font-weight: bold;
-    color: #ffffff;
-    letter-spacing: 10px;
+  font-size: 32px;
+  text-transform: uppercase;
+  font-weight: bold;
+  color: #ffffff;
+  letter-spacing: 10px;
 }
 
 .todo-footer {
-    text-align: center;
-    margin-top: 1rem;
-    font-size: 14px;
-    color: #757575;
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 14px;
+  color: #757575;
 }
 
 @media (max-width: 767px) {
-    .todo-container {
-        background-size: cover;
-    }
+  .todo-container {
+    background-size: cover;
+  }
 
-    .todo-header {
-        flex-direction: row;
-        max-width: 350px;
-    }
+  .todo-header {
+    flex-direction: row;
+    max-width: 350px;
+  }
 
-    .todo-title {
-        font-size: 24px;
-        letter-spacing: 5px;
-    }
+  .todo-title {
+    font-size: 24px;
+    letter-spacing: 5px;
+  }
 
-    .todo-footer {
-        font-size: 12px;
-        color: #ffffff;
-    }
+  .todo-footer {
+    font-size: 12px;
+    color: #ffffff;
+  }
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
-    .todo-container {
-        background-size: 100% 50%;
-        height: auto;
-        padding: 20px;
-    }
+  .todo-container {
+    background-size: 100% 50%;
+    height: auto;
+    padding: 20px;
+  }
 
-    .todo-title {
-        font-size: 28px;
-        letter-spacing: 7px;
-    }
+  .todo-title {
+    font-size: 28px;
+    letter-spacing: 7px;
+  }
 
-    .todo-footer {
-        font-size: 13px;
-    }
+  .todo-footer {
+    font-size: 13px;
+  }
 }
 
 @media (min-width: 1025px) {
-    .todo-container {
-        background-size: 100% 35%;
-    }
+  .todo-container {
+    background-size: 100% 35%;
+  }
 
-    .todo-title {
-        font-size: 36px;
-        letter-spacing: 12px;
-    }
+  .todo-title {
+    font-size: 36px;
+    letter-spacing: 12px;
+  }
 
-    .todo-footer {
-        font-size: 14px;
-    }
+  .todo-footer {
+    font-size: 14px;
+  }
 }
