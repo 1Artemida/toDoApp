@@ -1,4 +1,7 @@
 <div class="todo-container">
+  <div class="spinner-overlay" *ngIf="isDeleting">
+    <div class="spinner"></div>
+  </div>
   <div class="todo-header">
     <span class="todo-title">TODO</span>
     <svg

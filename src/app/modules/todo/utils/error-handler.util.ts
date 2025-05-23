@@ -3,13 +3,20 @@ import { ToastrService } from 'ngx-toastr';
 
 export function handleError(operation = 'operation', toastr?: ToastrService) {
   return (error: any) => {
-    const message = error?.message || error?.statusText || 'Unknown error';
-    console.error(`[${operation}] failed:`, error);
+    const backendMessage =
+      error?.error?.message ||
+      error?.error?.error ||
+      error?.message ||
+      error?.statusText ||
+      'Unknown error';
+
+    const finalMessage = `[${operation}] failed: ${backendMessage}`;
+    console.error(finalMessage, error);
 
     if (toastr) {
-      toastr.error(`[${operation}] failed`, 'Error');
+      toastr.error(backendMessage, 'Error');
     }
 
-    return throwError(() => new Error(`[${operation}] failed: ${message}`));
+    return throwError(() => new Error(finalMessage));
   };
 }

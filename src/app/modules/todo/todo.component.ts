@@ -4,10 +4,12 @@ import { TodoService } from './todo.service';
 import { Task, TaskStatus } from './todo.interfaces';
 import { TodoListComponent } from './todo-list/todo-list.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { finalize } from 'rxjs';
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-todo',
   standalone: true,
-  imports: [TodoCreateComponent, TodoListComponent],
+  imports: [TodoCreateComponent, TodoListComponent, CommonModule],
   templateUrl: './todo.component.html',
   styleUrl: './todo.component.css',
 })
@@ -81,7 +83,14 @@ export class TodoComponent implements OnInit {
 
     this.todoService
       .clearCompletedTasks()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => this.fetchTasks());
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => {
+          this.isDeleting = false;
+        })
+      )
+      .subscribe({
+        next: () => this.fetchTasks(),
+      });
   }
 }

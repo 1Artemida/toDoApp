@@ -15,65 +15,46 @@ export class TodoService {
 
   constructor(private http: HttpClient, private toastr: ToastrService) {}
 
+  private handle<T>(obs: Observable<T>, fallbackMsg: string): Observable<T> {
+    return obs.pipe(catchError(handleError(fallbackMsg, this.toastr)));
+  }
+
+  private putTask<T>(
+    id: number,
+    payload: Partial<Task>,
+    msg: string
+  ): Observable<T> {
+    return this.handle(this.http.put<T>(`${this.apiUrl}/${id}`, payload), msg);
+  }
+
   getTasks(): Observable<Task[]> {
-    return this.http.get<Task[]>(this.apiUrl).pipe(
-      map((tasks) =>
-        tasks.map((task) => ({
-          ...task,
-          status: task.status,
-        }))
-      ),
-      catchError((error) =>
-        handleError(`Loading tasks: ${error.message}`, this.toastr)(error)
-      )
+    return this.handle(
+      this.http
+        .get<Task[]>(this.apiUrl)
+        .pipe(
+          map((tasks) =>
+            tasks.map((task) => ({ ...task, status: task.status }))
+          )
+        ),
+      'Loading tasks'
     );
   }
 
   addTask(title: string): Observable<Task> {
     const payload = { title, completed: false, status: TaskStatus.medium };
-    return this.http
-      .post<Task>(this.apiUrl, payload)
-      .pipe(
-        catchError((error) =>
-          handleError(`Add task: ${error.message}`, this.toastr)(error)
-        )
-      );
+    return this.handle(this.http.post<Task>(this.apiUrl, payload), 'Add task');
   }
 
   editTask(id: number, newTitle: string): Observable<Task> {
-    return this.http
-      .put<Task>(`${this.apiUrl}/${id}`, { title: newTitle })
-      .pipe(
-        catchError((error) =>
-          handleError(`Edit task: ${error.message}`, this.toastr)(error)
-        )
-      );
+    return this.putTask<Task>(id, { title: newTitle }, 'Edit task');
   }
 
   toggleTaskCompletion(id: number, completed: boolean): Observable<Task> {
-    return this.http
-      .put<Task>(`${this.apiUrl}/${id}`, { completed })
-      .pipe(
-        catchError((error) =>
-          handleError(
-            `Toggle task completion: ${error.message}`,
-            this.toastr
-          )(error)
-        )
-      );
+    return this.putTask<Task>(id, { completed }, 'Toggle task completion');
   }
 
   updateTaskStatus(id: number, status: TaskStatus): Observable<Task> {
-    return this.http
-      .put<Task>(`${this.apiUrl}/${id}`, { status })
-      .pipe(
-        catchError((error) =>
-          handleError(
-            `Update the status of task: ${error.message}`,
-            this.toastr
-          )(error)
-        )
-      );
+    return this.putTask<Task>(id, { status }, 'Update task status');
   }
 
   clearCompletedTasks(): Observable<any> {
@@ -81,19 +62,15 @@ export class TodoService {
       switchMap((tasks) =>
         from(tasks.filter((t) => t.completed)).pipe(
           concatMap((task) =>
-            this.http
-              .delete(`${this.apiUrl}/${task.id}`)
-              .pipe(catchError(handleError(`Delete task with id: ${task.id}`)))
+            this.handle(
+              this.http.delete(`${this.apiUrl}/${task.id}`),
+              `Delete task with id: ${task.id}`
+            )
           ),
           toArray()
         )
       ),
-      catchError((error) =>
-        handleError(
-          `Clear completed tasks: ${error.message}`,
-          this.toastr
-        )(error)
-      )
+      catchError(handleError('Clear completed tasks', this.toastr))
     );
   }
 }
