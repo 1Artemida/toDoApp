@@ -1,8 +1,9 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { TodoCreateComponent } from './todo-create/todo-create.component';
 import { TodoService } from './todo.service';
 import { Task, TaskStatus } from './todo.interfaces';
 import { TodoListComponent } from './todo-list/todo-list.component';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 @Component({
   selector: 'app-todo',
   standalone: true,
@@ -11,17 +12,24 @@ import { TodoListComponent } from './todo-list/todo-list.component';
   styleUrl: './todo.component.css',
 })
 export class TodoComponent implements OnInit {
+  private destroyRef = inject(DestroyRef);
   tasks = signal<Task[]>([]);
   isDeleting = false;
 
   constructor(private todoService: TodoService) {}
 
   ngOnInit(): void {
-    this.fetchTasks();
+    this.todoService
+      .getTasks()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((tasks) => this.tasks.set(tasks));
   }
 
   private fetchTasks(): void {
-    this.todoService.getTasks().subscribe((tasks) => this.tasks.set(tasks));
+    this.todoService
+      .getTasks()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((tasks) => this.tasks.set(tasks));
   }
 
   addTask(title: string): void {
@@ -33,23 +41,36 @@ export class TodoComponent implements OnInit {
   toggleTaskCompletion(event: { id: number; completed: boolean }): void {
     this.todoService
       .toggleTaskCompletion(event.id, event.completed)
-      .subscribe(() => this.fetchTasks());
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.tasks.update((tasks) =>
+          tasks.map((task) =>
+            task.id === event.id
+              ? { ...task, completed: event.completed }
+              : task
+          )
+        );
+      });
   }
 
   editTask(event: { id: number; newTitle: string }): void {
     this.todoService
       .editTask(event.id, event.newTitle)
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => this.fetchTasks());
   }
 
   updateTaskStatus(event: { id: number; status: TaskStatus }): void {
-    this.todoService.updateTaskStatus(event.id, event.status).subscribe(() => {
-      this.tasks.update((tasks) =>
-        tasks.map((task) =>
-          task.id === event.id ? { ...task, status: event.status } : task
-        )
-      );
-    });
+    this.todoService
+      .updateTaskStatus(event.id, event.status)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.tasks.update((tasks) =>
+          tasks.map((task) =>
+            task.id === event.id ? { ...task, status: event.status } : task
+          )
+        );
+      });
   }
 
   clearCompleted(): void {
@@ -57,6 +78,9 @@ export class TodoComponent implements OnInit {
 
     this.isDeleting = true;
 
-    this.todoService.clearCompletedTasks().subscribe(() => this.fetchTasks());
+    this.todoService
+      .clearCompletedTasks()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.fetchTasks());
   }
 }
